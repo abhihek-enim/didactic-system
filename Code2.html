@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Current Weather</title>
+  </head>
+  <body>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  form {
+    text-align: center;
+  }
+
+  #city {
+    padding: 5px 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    padding: 5px 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f2f2f2;
+    cursor: pointer;
+  }
+
+  #weather-results {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+  }
+</style>
+
+    <h1>Current Weather</h1>
+
+    <form>
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city">
+      <button type="button" onclick="getWeather()">Get Weather</button>
+    </form>
+
+    <div id="weather-results"></div>
+
+    <script>
+  // Replace with your own API key
+  const API_KEY = "632fa655f1092cbb1c765c2bb536aaa8";
+
+  // Get the user-entered city from the form
+  function getWeather() {
+    const city = document.querySelector('#city').value;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        // Convert temperature from Kelvin to Celsius
+        const tempCelsius = data.main.temp - 273.15;
+
+        // Display the current temperature, weather conditions, wind speed, and humidity
+        const results = document.querySelector('#weather-results');
+        results.innerHTML = `
+          <p>Temperature: ${tempCelsius.toFixed(1)}°C</p>
+          <p>Conditions: ${data.weather[0].main}</p>
+          <p>Wind Speed: ${data.wind.speed} m/s</p>
+          <p>Humidity: ${data.main.humidity}%</p>
+        `;
+      })
+      .catch(error => {
+        // If there is an error, display an error message
+        const results = document.querySelector('#weather-results');
+        results.innerHTML = `<p>Sorry, we could not get the weather for that city.</p>`;
+      });
+  }
+</script>
+
+  </body>
+</html>
